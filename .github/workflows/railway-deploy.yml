@@ -1,0 +1,39 @@
+name: Deploy Backend to Railway
+
+on:
+  push:
+    branches: [ main, master ]
+    paths:
+      - 'src/python_backend/**'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: src/python_backend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Railway CLI
+        run: |
+          curl -fsSL https://railway.link/install | sh
+
+      - name: Set Railway Token
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: |
+          if [ -z "$RAILWAY_TOKEN" ]; then
+            echo "RAILWAY_TOKEN secret is missing"; exit 1;
+          fi
+          echo "Token present"
+
+      - name: Deploy
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        run: |
+          # Requires .railway project link in the repo (created via Railway extension or CLI)
+          railway status || true
+          railway up --detach

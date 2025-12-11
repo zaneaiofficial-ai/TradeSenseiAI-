@@ -1,0 +1,36 @@
+<Window x:Class="TradeSensei.UI.StreamingWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Streaming to OBS / TikTok Live" Height="360" Width="450" WindowStartupLocation="CenterOwner">
+    <Border Background="{StaticResource PrimaryBrush}" CornerRadius="12" Padding="16" Margin="8">
+        <StackPanel Orientation="Vertical">
+            <TextBlock Text="Stream Settings" FontSize="18" FontWeight="Bold" Margin="0,0,0,12" />
+
+            <TextBlock Text="Streaming Status:" Margin="0,0,0,4" />
+            <TextBlock Name="TxtStatus" Text="Not streaming" Foreground="{StaticResource FreeBrush}" FontWeight="Bold" Margin="0,0,0,12" />
+
+            <TextBlock Text="Frame Count:" Margin="0,0,0,4" />
+            <TextBlock Name="TxtFrameCount" Text="0" Margin="0,0,0,12" />
+
+            <TextBlock Text="Output Path (for OBS monitoring):" Margin="0,0,0,4" />
+            <TextBox Name="TxtOutputPath" Height="28" IsReadOnly="True" Margin="0,0,0,12" />
+
+            <Button Name="BtnCopyPath" Content="Copy Output Path" Width="160" Height="32" Margin="0,0,0,12" Click="BtnCopyPath_Click" />
+
+            <TextBlock Text="Streaming to:" Foreground="{StaticResource AccentBrush}" FontWeight="Bold" Margin="0,0,0,8" />
+            <TextBlock Text="• OBS VirtualCam (monitoring output folder)" Margin="8,0,0,4" />
+            <TextBlock Text="• Suitable for TikTok Live, Twitch, YouTube" Margin="8,0,0,12" />
+
+            <TextBlock Text="Instructions:" Foreground="{StaticResource AccentBrush}" FontWeight="Bold" Margin="0,0,0,8" />
+            <TextBlock Text="1. Copy the output path above" Margin="8,0,0,0" TextWrapping="Wrap" />
+            <TextBlock Text="2. In OBS, add Image Sequence source and select the output folder" Margin="8,0,0,0" TextWrapping="Wrap" />
+            <TextBlock Text="3. Configure update interval in OBS (e.g., 100ms)" Margin="8,0,0,12" TextWrapping="Wrap" />
+
+            <WrapPanel HorizontalAlignment="Right">
+                <Button Name="BtnStart" Content="Start Streaming" Width="130" Margin="0,0,8,0" Click="BtnStart_Click" />
+                <Button Name="BtnStop" Content="Stop Streaming" Width="120" Margin="0,0,8,0" Click="BtnStop_Click" />
+                <Button Name="BtnClose" Content="Close" Width="80" Click="BtnClose_Click" />
+            </WrapPanel>
+        </StackPanel>
+    </Border>
+</Window>

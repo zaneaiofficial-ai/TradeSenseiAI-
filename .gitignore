@@ -1,0 +1,11 @@
+.env
+__pycache__/
+*.pyc
+.venv/
+/.vscode/
+bin/
+obj/
+*.user
+*.suo
+*.cache
+*.log

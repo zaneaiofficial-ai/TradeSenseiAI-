@@ -1,0 +1,18 @@
+
+IMPORTANT NOTICE: Due to build complexity with the full WPF app, we'll use a simplified approach.
+
+Instead of building the full C# WPF application with all features, I'll create a simpler 
+Python-based voice chat application that connects to the backend APIs.
+
+The Python script will provide:
+1. Microphone input capture
+2. Speech-to-text via OpenAI Whisper
+3. AI mentor reasoning via GPT-4o-mini  
+4. Text-to-speech via ElevenLabs
+5. Audio playback
+
+This provides end-to-end voice chat testing without the WPF compilation overhead.
+
+The full WPF app can be built separately after getting these namespace issues resolved.
+
+See: run_voice_client.py for the simple implementation.

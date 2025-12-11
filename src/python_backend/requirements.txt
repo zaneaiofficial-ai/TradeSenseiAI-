@@ -1,0 +1,12 @@
+fastapi
+uvicorn[standard]
+websockets
+opencv-python
+numpy
+aiohttp
+pillow
+python-dotenv
+openai
+requests
+stripe
+supabase
