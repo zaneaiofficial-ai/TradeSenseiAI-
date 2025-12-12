@@ -190,6 +190,32 @@ namespace TradeSensei.UI
             w.ShowDialog();
         }
 
+        private void BtnPriceAlerts_Click(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(Auth.AuthState.UserId))
+            {
+                MessageBox.Show("Please sign in first.", "Price Alerts", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+            var w = new PriceAlertsWindow();
+            w.Owner = this;
+            w.Initialize(Auth.AuthState.UserId, ApiConfig.GetApiBaseUrl());
+            w.ShowDialog();
+        }
+
+        private void BtnPortfolio_Click(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(Auth.AuthState.UserId))
+            {
+                MessageBox.Show("Please sign in first.", "Portfolio", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+            var w = new PortfolioWindow();
+            w.Owner = this;
+            w.Initialize(Auth.AuthState.UserId, ApiConfig.GetApiBaseUrl());
+            w.ShowDialog();
+        }
+
         private async void BtnCheckout_Click(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrEmpty(Auth.AuthState.UserId))

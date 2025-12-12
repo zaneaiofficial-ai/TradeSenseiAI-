@@ -17,6 +17,11 @@ namespace TradeSensei.UI
             return $"{_baseUrl.TrimEnd('/')}/{endpoint.TrimStart('/')}";
         }
 
+        public static string GetApiBaseUrl()
+        {
+            return _baseUrl;
+        }
+
         public static string GetWebSocketUrl()
         {
             return _baseUrl.Replace("http://", "ws://").Replace("https://", "wss://") + "/ws";

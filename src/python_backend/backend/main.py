@@ -10,6 +10,8 @@ from . import subscriptions
 from . import supabase
 from . import mentor
 from . import webcam_vision
+from . import price_alerts
+from . import portfolio
 
 app = FastAPI()
 
@@ -312,3 +314,110 @@ async def get_journal_entries(user_id: str):
         return {"entries": entries}
     except Exception as e:
         return {"error": str(e)}
+
+
+# Price Alerts Endpoints
+@app.post('/alerts/create')
+async def create_price_alert(payload: dict):
+    """Create a new price alert.
+    
+    Expects: {"user_id": "...", "symbol": "BTC", "condition": "above", "price": 50000, "notification_type": "app"}
+    """
+    try:
+        user_id = payload.get('user_id')
+        symbol = payload.get('symbol')
+        condition = payload.get('condition')
+        price = payload.get('price')
+        notification_type = payload.get('notification_type', 'app')
+        
+        alert = price_alerts.create_alert(user_id, symbol, condition, price, notification_type)
+        return {"success": True, "alert": alert}
+    except Exception as e:
+        return {"error": str(e)}
+
+
+@app.get('/alerts/{user_id}')
+async def get_alerts(user_id: str):
+    """Get all alerts for a user."""
+    try:
+        alerts = price_alerts.get_user_alerts(user_id)
+        return {"alerts": alerts}
+    except Exception as e:
+        return {"error": str(e)}
+
+
+@app.delete('/alerts/{user_id}/{alert_id}')
+async def delete_alert(user_id: str, alert_id: str):
+    """Delete an alert."""
+    try:
+        success = price_alerts.delete_alert(user_id, alert_id)
+        return {"success": success}
+    except Exception as e:
+        return {"error": str(e)}
+
+
+@app.get('/price/{symbol}')
+async def get_price(symbol: str):
+    """Get current price for a symbol."""
+    try:
+        price = await price_alerts.get_binance_price(symbol)
+        if price:
+            return {"symbol": symbol, "price": price, "timestamp": datetime.now().isoformat()}
+        return {"error": f"Could not fetch price for {symbol}"}
+    except Exception as e:
+        return {"error": str(e)}
+
+
+# Portfolio Endpoints
+@app.post('/portfolio/add-position')
+async def add_position(payload: dict):
+    """Add a new trading position.
+    
+    Expects: {"user_id": "...", "symbol": "BTC", "entry_price": 50000, "quantity": 0.5, "side": "long", "stop_loss": 45000, "take_profit": 55000}
+    """
+    try:
+        user_id = payload.get('user_id')
+        position = portfolio.add_position(user_id, payload)
+        return {"success": True, "position": position}
+    except Exception as e:
+        return {"error": str(e)}
+
+
+@app.get('/portfolio/{user_id}')
+async def get_portfolio(user_id: str):
+    """Get complete portfolio for a user."""
+    try:
+        positions, stats = portfolio.get_portfolio(user_id)
+        return {"positions": positions, "stats": stats}
+    except Exception as e:
+        return {"error": str(e)}
+
+
+@app.post('/portfolio/close-position')
+async def close_position(payload: dict):
+    """Close a trading position.
+    
+    Expects: {"user_id": "...", "position_id": "...", "exit_price": 52000}
+    """
+    try:
+        user_id = payload.get('user_id')
+        position_id = payload.get('position_id')
+        exit_price = payload.get('exit_price')
+        
+        closed_position = portfolio.close_position(user_id, position_id, exit_price)
+        return {"success": True, "position": closed_position}
+    except Exception as e:
+        return {"error": str(e)}
+
+
+@app.get('/portfolio/stats/{user_id}')
+async def get_portfolio_stats(user_id: str):
+    """Get portfolio statistics."""
+    try:
+        stats = portfolio.get_portfolio_stats(user_id)
+        return stats
+    except Exception as e:
+        return {"error": str(e)}
+
+
+from datetime import datetime

@@ -93,3 +93,114 @@ def get_journal_entries(user_id: str) -> list:
     
     # Mock fallback - return empty list
     return []
+
+
+def save_alert(alert: dict) -> dict:
+    """Save a price alert to Supabase."""
+    if SUPABASE_URL and SUPABASE_KEY:
+        try:
+            import requests
+            url = f"{SUPABASE_URL}/rest/v1/price_alerts"
+            headers = {"apikey": SUPABASE_KEY, "Authorization": f"Bearer {SUPABASE_KEY}", "Content-Type": "application/json"}
+            r = requests.post(url, json=alert, headers=headers, timeout=8)
+            if r.status_code == 201:
+                return r.json()
+        except Exception:
+            pass
+    
+    return {"id": alert.get('id')}
+
+
+def delete_alert(alert_id: str) -> bool:
+    """Delete a price alert."""
+    if SUPABASE_URL and SUPABASE_KEY:
+        try:
+            import requests
+            url = f"{SUPABASE_URL}/rest/v1/price_alerts?id=eq.{alert_id}"
+            headers = {"apikey": SUPABASE_KEY, "Authorization": f"Bearer {SUPABASE_KEY}"}
+            r = requests.delete(url, headers=headers, timeout=8)
+            return r.status_code == 204
+        except Exception:
+            pass
+    
+    return True
+
+
+def get_all_alerts() -> list:
+    """Get all alerts from Supabase."""
+    if SUPABASE_URL and SUPABASE_KEY:
+        try:
+            import requests
+            url = f"{SUPABASE_URL}/rest/v1/price_alerts"
+            headers = {"apikey": SUPABASE_KEY}
+            r = requests.get(url, headers=headers, timeout=8)
+            if r.status_code == 200:
+                return r.json()
+        except Exception:
+            pass
+    
+    return []
+
+
+def save_position(position: dict) -> dict:
+    """Save a trading position to Supabase."""
+    if SUPABASE_URL and SUPABASE_KEY:
+        try:
+            import requests
+            url = f"{SUPABASE_URL}/rest/v1/positions"
+            headers = {"apikey": SUPABASE_KEY, "Authorization": f"Bearer {SUPABASE_KEY}", "Content-Type": "application/json"}
+            r = requests.post(url, json=position, headers=headers, timeout=8)
+            if r.status_code == 201:
+                return r.json()
+        except Exception:
+            pass
+    
+    return {"id": position.get('id')}
+
+
+def close_position(position_id: str, exit_price: float) -> bool:
+    """Close a trading position."""
+    if SUPABASE_URL and SUPABASE_KEY:
+        try:
+            import requests
+            url = f"{SUPABASE_URL}/rest/v1/positions?id=eq.{position_id}"
+            headers = {"apikey": SUPABASE_KEY, "Authorization": f"Bearer {SUPABASE_KEY}", "Content-Type": "application/json"}
+            payload = {"status": "closed", "exit_price": exit_price}
+            r = requests.patch(url, json=payload, headers=headers, timeout=8)
+            return r.status_code in [200, 204]
+        except Exception:
+            pass
+    
+    return True
+
+
+def get_user_positions(user_id: str) -> list:
+    """Get all positions for a user."""
+    if SUPABASE_URL and SUPABASE_KEY:
+        try:
+            import requests
+            url = f"{SUPABASE_URL}/rest/v1/positions?user_id=eq.{user_id}"
+            headers = {"apikey": SUPABASE_KEY}
+            r = requests.get(url, headers=headers, timeout=8)
+            if r.status_code == 200:
+                return r.json()
+        except Exception:
+            pass
+    
+    return []
+
+
+def update_position(position_id: str, position: dict) -> bool:
+    """Update a position."""
+    if SUPABASE_URL and SUPABASE_KEY:
+        try:
+            import requests
+            url = f"{SUPABASE_URL}/rest/v1/positions?id=eq.{position_id}"
+            headers = {"apikey": SUPABASE_KEY, "Authorization": f"Bearer {SUPABASE_KEY}", "Content-Type": "application/json"}
+            r = requests.patch(url, json=position, headers=headers, timeout=8)
+            return r.status_code in [200, 204]
+        except Exception:
+            pass
+    
+    return True
+

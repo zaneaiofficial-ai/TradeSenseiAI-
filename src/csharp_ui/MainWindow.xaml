@@ -25,6 +25,8 @@
                             <Button Name="BtnLogin" Content="Login" Width="100" Height="32" Margin="0,0,8,0" Click="BtnLogin_Click" />
                             <Button Name="BtnCheckout" Content="Subscribe / Checkout" Width="160" Height="32" Margin="8,0,0,0" Click="BtnCheckout_Click" />
                             <Button Name="BtnVoiceChat" Content="🎤 Voice Chat" Width="120" Height="32" Margin="8,0,0,0" Click="BtnVoiceChat_Click" />
+                            <Button Name="BtnPriceAlerts" Content="📊 Price Alerts" Width="120" Height="32" Margin="8,0,0,0" Click="BtnPriceAlerts_Click" />
+                            <Button Name="BtnPortfolio" Content="💼 Portfolio" Width="100" Height="32" Margin="8,0,0,0" Click="BtnPortfolio_Click" />
                         </WrapPanel>
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,0,0,4">
                             <TextBlock Name="TxtLoginStatus" Text="Not signed in" Margin="0,0,8,0" />

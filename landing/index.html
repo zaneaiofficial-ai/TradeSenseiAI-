@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TradeSensei AI - Your Futuristic Trading Mentor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0f1e 0%, #1a1a2e 50%, #16213e 100%);
+            color: #ecf0f1;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        header {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(45deg, #00d4ff, #0099ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+        
+        nav a {
+            color: #ecf0f1;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        nav a:hover {
+            color: #00d4ff;
+        }
+        
+        .cta-button {
+            background: linear-gradient(45deg, #00d4ff, #0099ff);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 212, 255, 0.3);
+        }
+        
+        .hero {
+            max-width: 1200px;
+            margin: 100px auto;
+            padding: 0 20px;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #00d4ff, #0099ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero p {
+            font-size: 20px;
+            color: #bdc3c7;
+            margin-bottom: 40px;
+        }
+        
+        .hero .buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 80px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(45deg, #00d4ff, #0099ff);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(0, 212, 255, 0.4);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: #00d4ff;
+            border: 2px solid #00d4ff;
+            padding: 13px 38px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        .btn-secondary:hover {
+            background: #00d4ff;
+            color: #0f0f1e;
+        }
+        
+        .features {
+            max-width: 1200px;
+            margin: 80px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+        
+        .feature {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 10px;
+            padding: 30px;
+            transition: all 0.3s;
+        }
+        
+        .feature:hover {
+            background: rgba(0, 212, 255, 0.1);
+            border-color: rgba(0, 212, 255, 0.5);
+            transform: translateY(-5px);
+        }
+        
+        .feature h3 {
+            color: #00d4ff;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+        
+        .feature p {
+            color: #bdc3c7;
+            line-height: 1.8;
+        }
+        
+        .pricing {
+            max-width: 1200px;
+            margin: 80px auto;
+            padding: 0 20px;
+        }
+        
+        .pricing h2 {
+            text-align: center;
+            font-size: 36px;
+            margin-bottom: 60px;
+            background: linear-gradient(45deg, #00d4ff, #0099ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .pricing-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+        
+        .pricing-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(0, 212, 255, 0.2);
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .pricing-card:hover {
+            border-color: rgba(0, 212, 255, 0.8);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
+            transform: scale(1.05);
+        }
+        
+        .pricing-card h3 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #00d4ff;
+        }
+        
+        .price {
+            font-size: 36px;
+            color: #00d4ff;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+        
+        .price-period {
+            color: #bdc3c7;
+            font-size: 14px;
+        }
+        
+        .features-list {
+            text-align: left;
+            margin: 30px 0;
+            color: #bdc3c7;
+        }
+        
+        .features-list li {
+            list-style: none;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(0, 212, 255, 0.1);
+        }
+        
+        .features-list li:before {
+            content: "✓ ";
+            color: #00d4ff;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        footer {
+            background: rgba(0, 0, 0, 0.5);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 40px 20px;
+            margin-top: 80px;
+            text-align: center;
+            color: #95a5a6;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+        
+        .footer-links a {
+            color: #00d4ff;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: #0099ff;
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 32px;
+            }
+            
+            .hero p {
+                font-size: 16px;
+            }
+            
+            .hero .buttons {
+                flex-direction: column;
+            }
+            
+            nav ul {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">🚀 TradeSensei AI</div>
+            <ul>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+                <li><a href="#about">About</a></li>
+                <li><button class="cta-button">Get Started</button></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <section class="hero">
+        <h1>Your Futuristic Trading Mentor</h1>
+        <p>AI-powered trading signals, real-time portfolio tracking, and voice-guided analysis. All powered by advanced machine learning.</p>
+        <div class="buttons">
+            <button class="btn-primary">Download Now</button>
+            <button class="btn-secondary">View Demo</button>
+        </div>
+    </section>
+    
+    <section class="features" id="features">
+        <div class="feature">
+            <h3>🎤 Voice Chat Mentor</h3>
+            <p>Talk to your AI mentor in natural language. Get instant trading advice with voice synthesis for hands-free operation.</p>
+        </div>
+        
+        <div class="feature">
+            <h3>📊 Price Alerts</h3>
+            <p>Set unlimited price alerts across cryptocurrencies and forex pairs. Get notified instantly when prices hit your targets.</p>
+        </div>
+        
+        <div class="feature">
+            <h3>💼 Portfolio Tracking</h3>
+            <p>Track all your open positions, calculate real-time P&L, analyze win rates, and monitor your trading performance metrics.</p>
+        </div>
+        
+        <div class="feature">
+            <h3>🎥 Webcam Vision</h3>
+            <p>Real-time chart analysis with webcam integration. Get overlay signals directly on your screen while trading.</p>
+        </div>
+        
+        <div class="feature">
+            <h3>📝 Trading Journal</h3>
+            <p>Keep a detailed trading journal with AI-powered insights. Learn from every trade and improve your strategy over time.</p>
+        </div>
+        
+        <div class="feature">
+            <h3>🔐 Secure & Private</h3>
+            <p>Enterprise-grade encryption. Your API keys and trading data stay private and never leave your device.</p>
+        </div>
+    </section>
+    
+    <section class="pricing" id="pricing">
+        <h2>Simple Pricing</h2>
+        <div class="pricing-cards">
+            <div class="pricing-card">
+                <h3>Free</h3>
+                <div class="price">$0<span class="price-period">/month</span></div>
+                <ul class="features-list">
+                    <li>Voice chat mentor</li>
+                    <li>5 price alerts</li>
+                    <li>Basic portfolio tracking</li>
+                    <li>Community support</li>
+                </ul>
+                <button class="btn-secondary">Start Free</button>
+            </div>
+            
+            <div class="pricing-card">
+                <h3>Pro</h3>
+                <div class="price">$29<span class="price-period">/month</span></div>
+                <ul class="features-list">
+                    <li>Unlimited alerts</li>
+                    <li>Advanced analytics</li>
+                    <li>Trading journal</li>
+                    <li>Email support</li>
+                    <li>API access</li>
+                </ul>
+                <button class="btn-primary">Upgrade to Pro</button>
+            </div>
+            
+            <div class="pricing-card">
+                <h3>Master</h3>
+                <div class="price">$99<span class="price-period">/month</span></div>
+                <ul class="features-list">
+                    <li>Everything in Pro</li>
+                    <li>Real-time signals</li>
+                    <li>Backtesting tools</li>
+                    <li>Priority support</li>
+                    <li>Custom strategies</li>
+                </ul>
+                <button class="btn-primary">Upgrade to Master</button>
+            </div>
+        </div>
+    </section>
+    
+    <footer>
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="#terms">Terms of Service</a>
+                <a href="#privacy">Privacy Policy</a>
+                <a href="#contact">Contact Us</a>
+                <a href="#docs">Documentation</a>
+            </div>
+            <p>&copy; 2025 TradeSensei AI. Powered by OpenAI, ElevenLabs, and advanced machine learning. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>
