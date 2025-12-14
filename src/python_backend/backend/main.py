@@ -1,6 +1,17 @@
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Request, HTTPException
 import base64
 import json
+import os
+
+# Set default env vars to prevent import crashes
+os.environ.setdefault('SUPABASE_URL', 'dummy')
+os.environ.setdefault('SUPABASE_KEY', 'dummy')
+os.environ.setdefault('SUPABASE_SERVICE_KEY', 'dummy')
+os.environ.setdefault('ADMIN_EMAIL', 'dummy@example.com')
+os.environ.setdefault('OPENAI_API_KEY', 'dummy')
+os.environ.setdefault('ELEVENLABS_API_KEY', 'dummy')
+os.environ.setdefault('OPENAI_MODEL', 'gpt-3.5-turbo')
+os.environ.setdefault('PYTHONUNBUFFERED', '1')
 
 # Defensive imports for optional dependencies
 try:
