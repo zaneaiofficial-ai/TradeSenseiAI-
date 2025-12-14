@@ -17,28 +17,91 @@ except ImportError:
     np = None
     HAS_NUMPY = False
 
-from . import vision
-from . import trading_advisor
-from . import speech
-from . import subscriptions
-from . import supabase
-from . import mentor
-from . import webcam_vision
-from . import price_alerts
-from . import portfolio
+# Defensive imports for modules that may require env vars
+try:
+    from . import vision
+    HAS_VISION = True
+except Exception as e:
+    vision = None
+    HAS_VISION = False
+    print(f"Vision module failed to import: {e}")
+
+try:
+    from . import trading_advisor
+    HAS_TRADING_ADVISOR = True
+except Exception as e:
+    trading_advisor = None
+    HAS_TRADING_ADVISOR = False
+    print(f"Trading advisor module failed to import: {e}")
+
+try:
+    from . import speech
+    HAS_SPEECH = True
+except Exception as e:
+    speech = None
+    HAS_SPEECH = False
+    print(f"Speech module failed to import: {e}")
+
+try:
+    from . import subscriptions
+    HAS_SUBSCRIPTIONS = True
+except Exception as e:
+    subscriptions = None
+    HAS_SUBSCRIPTIONS = False
+    print(f"Subscriptions module failed to import: {e}")
+
+try:
+    from . import supabase
+    HAS_SUPABASE = True
+except Exception as e:
+    supabase = None
+    HAS_SUPABASE = False
+    print(f"Supabase module failed to import: {e}")
+
+try:
+    from . import mentor
+    HAS_MENTOR = True
+except Exception as e:
+    mentor = None
+    HAS_MENTOR = False
+    print(f"Mentor module failed to import: {e}")
+
+try:
+    from . import webcam_vision
+    HAS_WEBCAM_VISION = True
+except Exception as e:
+    webcam_vision = None
+    HAS_WEBCAM_VISION = False
+    print(f"Webcam vision module failed to import: {e}")
+
+try:
+    from . import price_alerts
+    HAS_PRICE_ALERTS = True
+except Exception as e:
+    price_alerts = None
+    HAS_PRICE_ALERTS = False
+    print(f"Price alerts module failed to import: {e}")
+
+try:
+    from . import portfolio
+    HAS_PORTFOLIO = True
+except Exception as e:
+    portfolio = None
+    HAS_PORTFOLIO = False
+    print(f"Portfolio module failed to import: {e}")
 
 app = FastAPI()
 
 
 @app.get('/')
 async def root():
-    return {"status": "TradeSensei AI backend running", "opencv": HAS_OPENCV, "numpy": HAS_NUMPY}
+    return {"status": "TradeSensei AI backend running", "opencv": HAS_OPENCV, "numpy": HAS_NUMPY, "supabase": HAS_SUPABASE}
 
 
 @app.get('/health')
 async def health():
     """Health check endpoint for Railway."""
-    return {"status": "healthy", "opencv": HAS_OPENCV, "numpy": HAS_NUMPY}
+    return {"status": "healthy", "opencv": HAS_OPENCV, "numpy": HAS_NUMPY, "supabase": HAS_SUPABASE}
 
 
 @app.websocket('/ws')
@@ -169,6 +232,8 @@ async def auth_signin(payload: dict):
 
     Returns {"user_id":..., "access_token":...} on success.
     """
+    if not HAS_SUPABASE:
+        return {"ok": False, "reason": "Supabase not configured"}
     email = payload.get('email')
     password = payload.get('password')
     if not email or not password:
