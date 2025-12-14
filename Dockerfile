@@ -15,7 +15,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Python deps first (cached when unchanged)
-COPY requirements.txt .
+COPY src/python_backend/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy source code
@@ -23,7 +23,5 @@ COPY . .
 
 EXPOSE 8000
 
-ENV PORT=8000
-
 # Use shell form to expand $PORT
-CMD sh -c "uvicorn backend.main:app --host 0.0.0.0 --port $PORT"
+CMD sh -c "cd src/python_backend && uvicorn backend.main:app --host 0.0.0.0 --port $PORT"
