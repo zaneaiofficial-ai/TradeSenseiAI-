@@ -1,8 +1,22 @@
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Request, HTTPException
 import base64
-import cv2
-import numpy as np
 import json
+
+# Defensive imports for optional dependencies
+try:
+    import cv2
+    HAS_OPENCV = True
+except ImportError:
+    cv2 = None
+    HAS_OPENCV = False
+
+try:
+    import numpy as np
+    HAS_NUMPY = True
+except ImportError:
+    np = None
+    HAS_NUMPY = False
+
 from . import vision
 from . import trading_advisor
 from . import speech
@@ -18,7 +32,13 @@ app = FastAPI()
 
 @app.get('/')
 async def root():
-    return {"status": "TradeSensei AI backend running"}
+    return {"status": "TradeSensei AI backend running", "opencv": HAS_OPENCV, "numpy": HAS_NUMPY}
+
+
+@app.get('/health')
+async def health():
+    """Health check endpoint for Railway."""
+    return {"status": "healthy", "opencv": HAS_OPENCV, "numpy": HAS_NUMPY}
 
 
 @app.websocket('/ws')
@@ -30,6 +50,9 @@ async def websocket_endpoint(ws: WebSocket):
 
             if data.get('type') == 'frame':
                 b64 = data.get('data')
+                if not HAS_OPENCV or not HAS_NUMPY:
+                    await ws.send_json({"type": "error", "message": "OpenCV or NumPy not available"})
+                    continue
                 try:
                     img_bytes = base64.b64decode(b64)
                     nparr = np.frombuffer(img_bytes, np.uint8)
