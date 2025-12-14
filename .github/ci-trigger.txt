@@ -1,0 +1,3 @@
+CI deploy trigger file - safe no-op
+This file is used to trigger the GitHub Actions workflow for testing Railway deployment.
+Timestamp: 2025-12-14
