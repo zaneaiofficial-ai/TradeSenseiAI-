@@ -22,6 +22,8 @@ jobs:
         run: |
           dotnet restore src/csharp_ui/TradeSensei.UI.csproj
           dotnet publish src/csharp_ui/TradeSensei.UI.csproj -c Release -r win-x64 --self-contained false
+          Write-Host "Publish output:"
+          Get-ChildItem "src/csharp_ui/bin/Release/net8.0-windows/win-x64/publish" -Recurse | Select-Object FullName, Length | Format-Table -AutoSize
 
       - name: Install NSIS
         run: |
@@ -29,14 +31,20 @@ jobs:
 
       - name: Build NSIS installer
         run: |
-          "$env:ProgramFiles(x86)\NSIS\makensis.exe" installer\TradeSenseiAI.nsi
+          # Use makensis from Chocolatey PATH
+          $makensis = (Get-Command makensis -ErrorAction SilentlyContinue)
+          if (-not $makensis) { $makensis = Get-Item "$env:ProgramFiles(x86)\NSIS\makensis.exe" }
+          & $makensis installer\TradeSenseiAI.nsi
+          Write-Host "Built installer:" (Get-Item "installer/TradeSenseiAI-Setup.exe").FullName
 
       - name: Upload installer to release
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           choco install gh -y
           $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
           gh --version
-          gh release create ${{ github.ref_name }} --notes "TradeSensei AI release ${{ github.ref_name }}" || echo "Release exists"
+          # Create the release if it doesn't exist, else continue
+          gh release view ${{ github.ref_name }} || gh release create ${{ github.ref_name }} --notes "TradeSensei AI release ${{ github.ref_name }}"
+          # Upload the installer asset
           gh release upload ${{ github.ref_name }} installer/TradeSenseiAI-Setup.exe --clobber
