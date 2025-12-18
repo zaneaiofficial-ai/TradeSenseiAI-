@@ -28,15 +28,27 @@ jobs:
       - name: Install NSIS
         run: |
           choco install nsis -y
+          # Ensure Chocolatey bin is on PATH for subsequent steps
+          $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
+          # Optional: verify installation
+          (Get-Command makensis -ErrorAction SilentlyContinue) | Out-String
 
       - name: Build NSIS installer
         run: |
-          # Use makensis from Chocolatey PATH
-          $makensis = (Get-Command makensis -ErrorAction SilentlyContinue)
-          if (-not $makensis) { $makensis = Get-Item "$env:ProgramFiles(x86)\NSIS\makensis.exe" }
+          # Robust resolution of makensis across common install locations
+          $exe = $null
+          $cmd = Get-Command makensis -ErrorAction SilentlyContinue
+          if ($cmd) { $exe = $cmd.Source }
+          if (-not $exe -and (Test-Path "$env:ProgramFiles\NSIS\makensis.exe")) { $exe = "$env:ProgramFiles\NSIS\makensis.exe" }
+          if (-not $exe -and (Test-Path "$env:ProgramFiles(x86)\NSIS\makensis.exe")) { $exe = "$env:ProgramFiles(x86)\NSIS\makensis.exe" }
+          if (-not $exe -and $env:ChocolateyInstall -and (Test-Path "$env:ChocolateyInstall\bin\makensis.exe")) { $exe = "$env:ChocolateyInstall\bin\makensis.exe" }
+          if (-not $exe -and $env:ChocolateyInstall -and (Test-Path "$env:ChocolateyInstall\lib\nsis\tools\makensis.exe")) { $exe = "$env:ChocolateyInstall\lib\nsis\tools\makensis.exe" }
+          if (-not $exe) { Write-Error "makensis executable not found after install"; exit 1 }
+
           $pub = "src\csharp_ui\bin\Release\net8.0-windows\win-x64\publish"
           Write-Host "Using publish directory: $pub"
-          & $makensis /V4 /D PUBLISH_DIR="$pub" installer\TradeSenseiAI.nsi
+          if (-not (Test-Path $pub)) { Write-Error "Publish directory missing: $pub"; Get-ChildItem "src\csharp_ui\bin\Release" -Recurse | Select-Object FullName; exit 1 }
+          & $exe /V4 /D PUBLISH_DIR="$pub" installer\TradeSenseiAI.nsi
           Write-Host "Built installer:" (Get-Item "installer/TradeSenseiAI-Setup.exe").FullName
 
       - name: Upload installer to release
