@@ -34,7 +34,9 @@ jobs:
           # Use makensis from Chocolatey PATH
           $makensis = (Get-Command makensis -ErrorAction SilentlyContinue)
           if (-not $makensis) { $makensis = Get-Item "$env:ProgramFiles(x86)\NSIS\makensis.exe" }
-          & $makensis installer\TradeSenseiAI.nsi
+          $pub = "src\csharp_ui\bin\Release\net8.0-windows\win-x64\publish"
+          Write-Host "Using publish directory: $pub"
+          & $makensis /V4 /D PUBLISH_DIR="$pub" installer\TradeSenseiAI.nsi
           Write-Host "Built installer:" (Get-Item "installer/TradeSenseiAI-Setup.exe").FullName
 
       - name: Upload installer to release

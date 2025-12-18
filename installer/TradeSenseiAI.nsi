@@ -4,6 +4,11 @@
 !include "MUI2.nsh"
 !include "x64.nsh"
 
+; Allow overriding publish directory via command-line define
+!ifndef PUBLISH_DIR
+!define PUBLISH_DIR "..\src\csharp_ui\bin\Release\net8.0-windows\win-x64\publish"
+!endif
+
 ; Name and file
 Name "TradeSensei AI"
 OutFile "TradeSenseiAI-Setup.exe"
@@ -30,8 +35,15 @@ InstallDirRegKey HKCU "Software\TradeSensei AI" ""
 Section "Install"
   SetOutPath "$INSTDIR"
   
+  ; Verify publish directory exists
+  IfFileExists "${PUBLISH_DIR}\*.*" +3 0
+    DetailPrint "Publish directory found: ${PUBLISH_DIR}"
+    Goto +2
+  DetailPrint "ERROR: Publish directory not found: ${PUBLISH_DIR}"
+  Abort
+
   ; Copy all files from publish folder
-  File /r "..\src\csharp_ui\bin\Release\net8.0-windows\win-x64\publish\*.*"
+  File /r "${PUBLISH_DIR}\*.*"
   
   ; Create shortcuts
   CreateDirectory "$SMPROGRAMS\TradeSensei AI"
