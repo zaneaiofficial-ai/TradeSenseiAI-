@@ -1,0 +1,8 @@
+TradeSensei AI End User License Agreement (EULA)
+
+By installing and using TradeSensei AI, you agree to the following:
+- The software is provided "as is" without warranties of any kind.
+- You are responsible for complying with all applicable laws and regulations.
+- The authors/owners are not liable for any damages arising from use.
+
+If you do not agree, do not install the software.
