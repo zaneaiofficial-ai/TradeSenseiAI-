@@ -28,8 +28,17 @@ jobs:
       - name: Install NSIS
         run: |
           choco install nsis -y
-          # Ensure Chocolatey bin is on PATH for subsequent steps
+          # Fallbacks in case the main package doesn't lay down makensis
+          if (-not (Test-Path "$env:ChocolateyInstall\lib\nsis\tools\makensis.exe")) {
+            choco install nsis.portable -y
+          }
+          if (-not (Test-Path "$env:ChocolateyInstall\lib\nsis.portable\tools\makensis.exe") -and -not (Test-Path "$env:ChocolateyInstall\lib\nsis\tools\makensis.exe")) {
+            choco install nsis.install -y
+          }
+          # Ensure PATH is fresh for subsequent steps
           $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
+          # Log discovered Chocolatey NSIS dirs
+          Get-ChildItem "$env:ChocolateyInstall\lib" -Filter "nsis*" -ErrorAction SilentlyContinue | Select-Object FullName | Format-Table -AutoSize
           # Optional: verify installation
           (Get-Command makensis -ErrorAction SilentlyContinue) | Out-String
 
@@ -39,10 +48,14 @@ jobs:
           $exe = $null
           $cmd = Get-Command makensis -ErrorAction SilentlyContinue
           if ($cmd) { $exe = $cmd.Source }
-          if (-not $exe -and (Test-Path "$env:ProgramFiles\NSIS\makensis.exe")) { $exe = "$env:ProgramFiles\NSIS\makensis.exe" }
-          if (-not $exe -and (Test-Path "$env:ProgramFiles(x86)\NSIS\makensis.exe")) { $exe = "$env:ProgramFiles(x86)\NSIS\makensis.exe" }
-          if (-not $exe -and $env:ChocolateyInstall -and (Test-Path "$env:ChocolateyInstall\bin\makensis.exe")) { $exe = "$env:ChocolateyInstall\bin\makensis.exe" }
-          if (-not $exe -and $env:ChocolateyInstall -and (Test-Path "$env:ChocolateyInstall\lib\nsis\tools\makensis.exe")) { $exe = "$env:ChocolateyInstall\lib\nsis\tools\makensis.exe" }
+          $pf = [System.Environment]::GetEnvironmentVariable('ProgramFiles')
+          $pf86 = [System.Environment]::GetEnvironmentVariable('ProgramFiles(x86)')
+          if (-not $exe -and $pf -and (Test-Path (Join-Path $pf 'NSIS\makensis.exe'))) { $exe = (Join-Path $pf 'NSIS\makensis.exe') }
+          if (-not $exe -and $pf86 -and (Test-Path (Join-Path $pf86 'NSIS\makensis.exe'))) { $exe = (Join-Path $pf86 'NSIS\makensis.exe') }
+          if (-not $exe -and $env:ChocolateyInstall -and (Test-Path (Join-Path $env:ChocolateyInstall 'bin\makensis.exe'))) { $exe = (Join-Path $env:ChocolateyInstall 'bin\makensis.exe') }
+          if (-not $exe -and $env:ChocolateyInstall -and (Test-Path (Join-Path $env:ChocolateyInstall 'lib\nsis\tools\makensis.exe'))) { $exe = (Join-Path $env:ChocolateyInstall 'lib\nsis\tools\makensis.exe') }
+          if (-not $exe -and $env:ChocolateyInstall -and (Test-Path (Join-Path $env:ChocolateyInstall 'lib\nsis.portable\tools\makensis.exe'))) { $exe = (Join-Path $env:ChocolateyInstall 'lib\nsis.portable\tools\makensis.exe') }
+          if (-not $exe -and $env:ChocolateyInstall -and (Test-Path (Join-Path $env:ChocolateyInstall 'lib\nsis.install\tools\makensis.exe'))) { $exe = (Join-Path $env:ChocolateyInstall 'lib\nsis.install\tools\makensis.exe') }
           if (-not $exe) { Write-Error "makensis executable not found after install"; exit 1 }
 
           $pub = "src\csharp_ui\bin\Release\net8.0-windows\win-x64\publish"
